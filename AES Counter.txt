@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kij_chat_client;
+    import java.security.MessageDigest;
+import java.util.Arrays;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+/**
+ *
+ * @author User
+ */
+public class AES {
+  static String plaintext = "test text 123\0\0\0";
+  public static void main(String [] args) {
+    try {
+      
+      System.out.println("==Java==");
+      System.out.println("plain:   " + plaintext);
+
+      byte[] cipher = encrypt(plaintext);
+
+      System.out.print("cipher:  ");
+      for (int i=0; i<cipher.length; i++)
+        System.out.print(new Integer(cipher[i])+" ");
+      System.out.println("");
+
+      String decrypted = decrypt(cipher);
+
+      System.out.println("decrypt: " + decrypted);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } 
+  }
+
+  public static byte[] encrypt(String plainText) throws Exception {
+     Cipher c = Cipher.getInstance("AES/CTR/NoPadding");
+    KeyGenerator kg = KeyGenerator.getInstance("AES");
+    c.init(Cipher.ENCRYPT_MODE, kg.generateKey());
+    return c.doFinal(plainText.getBytes("UTF-8"));
+  }
+
+  public static String decrypt(byte[] cipherText) throws Exception{
+    Cipher c = Cipher.getInstance("AES/CTR/NoPadding");
+    KeyGenerator kg = KeyGenerator.getInstance("AES");
+    c.init(Cipher.DECRYPT_MODE, kg.generateKey());
+    return new String(c.doFinal(cipherText),"UTF-8");
+  }
+}
+
