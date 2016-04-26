@@ -20,6 +20,7 @@ public class Client implements Runnable{
         private ArrayList<Pair<Socket,String>> _loginlist;
         private ArrayList <Pair<String,Pair<String,String>>> _userlist;
         private ArrayList<Pair<String,String>> _grouplist;
+    private String publicKey;
 	
 	public Client(Socket s, ArrayList<Pair<Socket,String>> _loginlist, ArrayList<Pair<String, Pair<String,String>>> _userlist, ArrayList<Pair<String,String>> _grouplist)
 	{
@@ -52,32 +53,25 @@ public class Client implements Runnable{
                                             String[] vals = input.split(" ");
                                              String temp = vals[3];
                                              
-                                            for(int i=0;i<_userlist.size();i++)
+                                        for(int i=0;i<_userlist.size();i++)
+                                              {
+                                                  if(_userlist.get(i).getSecond().getFirst().equals(vals[1]) && _userlist.get(i).getSecond().getSecond().equals(vals[2]))
                                                   {
-                                                      if(_userlist.get(i).getSecond().getFirst().equals(vals[1]) && _userlist.get(i).getSecond().getSecond().equals(vals[2]))
-                                                      {
-                                                          this.publicKey = temp;
-                                                          this.username = _userlist.get(i).getSecond().getFirst();
-                                                          break;
-                                                      }
+                                                      this.publicKey = temp;
+                                                      this.username = _userlist.get(i).getSecond().getFirst();
+                                                      break;
                                                   }
+                                              }
                                             
-                                            if (this._userlist.contains(new Pair(vals[1], vals[2])) == true) {
+                                              if (this.username!=null) {
                                                 if (this.login == false) {
-                                                    this._loginlist.add(new Pair(this.socket, vals[1]));
-                                                    this.username = vals[1];
+                                                    this._loginlist.add(new Pair(this.socket, vals[1]));                                              
+                                                    
                                                     this.login = true;
                                                     System.out.println("Users count: " + this._loginlist.size());
                                                     out.println("SUCCESS login");
                                                     out.flush();
-                                                } else {
-                                                    out.println("FAIL login");
-                                                    out.flush();
-                                                }
-                                            } else {
-                                                out.println("FAIL login");
-                                                out.flush();
-                                            }
+                                           asasa
                                         }
                                         
                                         // param LOGOUT
