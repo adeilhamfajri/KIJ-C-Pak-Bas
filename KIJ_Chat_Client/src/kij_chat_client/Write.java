@@ -15,6 +15,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 import sun.misc.BASE64Encoder;
 /**
 /**
@@ -97,7 +98,7 @@ public class Write implements Runnable {
                         
                         String algorithm = "AES";           //tambahan
                                 
-                        privateKey = newSecretKeySpec(keyValue, algorithm);     //tambahan
+                        privateKey = new SecretKeySpec(keyValue, algorithm);     //tambahan
                         privateKey = generateKey();             //tambahan
                         encryptedMsg = AES.encrypt(plaintext);          //tambahan
                                 
