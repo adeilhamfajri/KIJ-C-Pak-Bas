@@ -2,8 +2,12 @@ package kij_chat_server;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Scanner;
+import sun.misc.BASE64Decoder;
 
 /** original ->http://www.dreamincode.net/forums/topic/262304-simple-client-and-server-chat-program/
  * 
@@ -16,11 +20,11 @@ public class Client implements Runnable{
 	private Socket socket;//SOCKET INSTANCE VARIABLE
         private String username;
         private boolean login = false;
+        private String publicKey;
         
         private ArrayList<Pair<Socket,String>> _loginlist;
         private ArrayList <Pair<String,Pair<String,String>>> _userlist;
         private ArrayList<Pair<String,String>> _grouplist;
-    private String publicKey;
 	
 	public Client(Socket s, ArrayList<Pair<Socket,String>> _loginlist, ArrayList<Pair<String, Pair<String,String>>> _userlist, ArrayList<Pair<String,String>> _grouplist)
 	{
@@ -28,9 +32,9 @@ public class Client implements Runnable{
                 this._loginlist = _loginlist;
                 this._userlist = _userlist;
                 this._grouplist = _grouplist;
+            
 	}
-
-
+	
 	@Override
 	public void run() //(IMPLEMENTED FROM THE RUNNABLE INTERFACE)
 	{
@@ -51,19 +55,32 @@ public class Client implements Runnable{
                                         // param LOGIN <userName> <pass>
                                         if (input.split(" ")[0].toLowerCase().equals("login") == true) {
                                             String[] vals = input.split(" ");
-                                             String temp = vals[3];
-                                             
-                                        for(int i=0;i<_userlist.size();i++)
-                                              {
-                                                  if(_userlist.get(i).getSecond().getFirst().equals(vals[1]) && _userlist.get(i).getSecond().getSecond().equals(vals[2]))
-                                                  {
-                                                      this.publicKey = temp;
-                                                      this.username = _userlist.get(i).getSecond().getFirst();
-                                                      break;
-                                                  }
-                                              }
+                                            String temp = vals[3];
+                                            //System.out.println(repl);
                                             
-                                              if (this.username!=null) {
+                                           //X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(tempPubKey);
+                                            //KeyFactory keyFact = KeyFactory.getInstance("RSA");
+                                            //PublicKey pubKey2 = keyFact.generatePublic(x509KeySpec); //Public key
+                                            //balikin public key
+                                            //String repl = temp.replaceAll("~", "\n");
+                                            //BASE64Decoder decoder = new BASE64Decoder();
+                                            //byte[] tempPubKey = decoder.decodeBuffer(repl);
+                                            
+                                            
+                                            //X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(tempPubKey);
+                                            //KeyFactory keyFact = KeyFactory.getInstance("RSA");
+                                            //PublicKey pubKey2 = keyFact.generatePublic(x509KeySpec); //Public key
+                                            //System.out.println(pubKey2);
+                                            for(int i=0;i<_userlist.size();i++)
+                                                    {
+                                                        if(_userlist.get(i).getSecond().getFirst().equals(vals[1]) && _userlist.get(i).getSecond().getSecond().equals(vals[2]))
+                                                        {
+                                                            this.publicKey = temp;
+                                                            this.username = _userlist.get(i).getSecond().getFirst();
+                                                            break;
+                                                        }
+                                                    }
+                                            if (this.username!=null) {
                                                 if (this.login == false) {
                                                     this._loginlist.add(new Pair(this.socket, vals[1]));                                              
                                                     
@@ -71,7 +88,14 @@ public class Client implements Runnable{
                                                     System.out.println("Users count: " + this._loginlist.size());
                                                     out.println("SUCCESS login");
                                                     out.flush();
-                                           asasa
+                                                } else {
+                                                    out.println("FAIL login");
+                                                    out.flush();
+                                                }
+                                            } else {
+                                                out.println("FAIL login");
+                                                out.flush();
+                                            }
                                         }
                                         
                                         // param LOGOUT
@@ -105,7 +129,8 @@ public class Client implements Runnable{
                                                         messageOut += vals[j] + " ";
                                                     }
                                                     System.out.println(this.username + " to " + vals[1] + " : " + messageOut);
-                                                    outDest.println(this.username + ": " + messageOut);
+                                                   
+                                                    outDest.println(this.username + " : " + messageOut+"#"+ this.publicKey);
                                                     outDest.flush();
                                                     exist = true;
                                                 }

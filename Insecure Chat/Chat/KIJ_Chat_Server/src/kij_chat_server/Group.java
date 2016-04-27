@@ -21,6 +21,8 @@ public class Group {
         _grouplist.add(new Pair("User", "Budi"));
         _grouplist.add(new Pair("User", "Rudi"));
         _grouplist.add(new Pair("User", "Luci"));
+        
+        
     }
     
     Group(ArrayList<Pair<String,String>> _grouplist) {

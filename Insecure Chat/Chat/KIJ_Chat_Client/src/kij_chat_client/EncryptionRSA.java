@@ -5,8 +5,8 @@
  */
 package kij_chat_client;
 
-import java.awt.RenderingHints.Key;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +18,7 @@ import javax.crypto.NoSuchPaddingException;
 
 /**
  *
- * @author AdeIlham
+ * @author Luffi
  */
 public class EncryptionRSA {
     
@@ -33,19 +33,20 @@ public class EncryptionRSA {
     
     }
     
-      public String encrypt(String plain, Key privateKey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException
+        
+        public String encrypt(String plain, Key privateKey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException
         {
             final Cipher cipher = Cipher.getInstance("RSA");
             final String plaintext = plain;
             
-            cipher.init(Cipher.ENCRYPT_MODE, (java.security.Key) privateKey);
+            cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes());
             String chipertext = new String(Base64.getEncoder().encode(encryptedBytes));
             //System.out.println("encrypted (chipertext) = " + chipertext);
             return chipertext;
         }
-      
-      public String decrypt(String chipertext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+        
+        public String decrypt(String chipertext) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
         {
             final Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
@@ -57,4 +58,5 @@ public class EncryptionRSA {
 //            System.out.println("private = " + keyPair.getPrivate());
             return decryptedString;
         }
+    
 }

@@ -33,8 +33,7 @@ public class Main {
 				System.out.println("Client connected from " + s.getLocalAddress().getHostName());	//	TELL THEM THAT THE CLIENT CONNECTED
 				
 				Client chat = new Client(s, _loginlist, _userlist, _grouplist);//CREATE A NEW CLIENT OBJECT
-				
-                                Thread t = new Thread(chat);//MAKE A NEW THREAD
+				Thread t = new Thread(chat);//MAKE A NEW THREAD
 				t.start();//START THE THREAD
 			}
 		} 
