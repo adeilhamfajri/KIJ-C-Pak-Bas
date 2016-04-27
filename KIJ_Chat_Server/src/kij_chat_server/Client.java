@@ -16,18 +16,22 @@ public class Client implements Runnable{
 	private Socket socket;//SOCKET INSTANCE VARIABLE
         private String username;
         private boolean login = false;
+        private String publicKey;
         
         private ArrayList<Pair<Socket,String>> _loginlist;
-        private ArrayList<Pair<String,String>> _userlist;
+        private ArrayList <Pair<String,Pair<String,String>>> _userlist;
         private ArrayList<Pair<String,String>> _grouplist;
 	
-	public Client(Socket s, ArrayList<Pair<Socket,String>> _loginlist, ArrayList<Pair<String,String>> _userlist, ArrayList<Pair<String,String>> _grouplist)
+	public Client(Socket s, ArrayList<Pair<Socket,String>> _loginlist, ArrayList<Pair<String, Pair<String,String>>> _userlist, ArrayList<Pair<String,String>> _grouplist)
 	{
 		socket = s;//INSTANTIATE THE SOCKET)
                 this._loginlist = _loginlist;
                 this._userlist = _userlist;
                 this._grouplist = _grouplist;
+            
 	}
+
+ 
 	
 	@Override
 	public void run() //(IMPLEMENTED FROM THE RUNNABLE INTERFACE)
@@ -49,11 +53,20 @@ public class Client implements Runnable{
                                         // param LOGIN <userName> <pass>
                                         if (input.split(" ")[0].toLowerCase().equals("login") == true) {
                                             String[] vals = input.split(" ");
-                                            
-                                            if (this._userlist.contains(new Pair(vals[1], vals[2])) == true) {
+                                            String temp = vals[3];
+                                            for(int i=0;i<_userlist.size();i++)
+                                                    {
+                                                        if(_userlist.get(i).getSecond().getFirst().equals(vals[1]) && _userlist.get(i).getSecond().getSecond().equals(vals[2]))
+                                                        {
+                                                            this.publicKey = temp;
+                                                            this.username = _userlist.get(i).getSecond().getFirst();
+                                                            break;
+                                                        }
+                                                    }
+                                            if (this.username!=null) {
                                                 if (this.login == false) {
-                                                    this._loginlist.add(new Pair(this.socket, vals[1]));
-                                                    this.username = vals[1];
+                                                    this._loginlist.add(new Pair(this.socket, vals[1]));                                              
+                                                    
                                                     this.login = true;
                                                     System.out.println("Users count: " + this._loginlist.size());
                                                     out.println("SUCCESS login");
